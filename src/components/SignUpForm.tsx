@@ -14,12 +14,15 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { SignUpModel } from '../models/signUp'
+import { toast } from 'react-toastify'
+import { LoginModel, LoginResponseModel } from '../models/login'
 
 interface SignUpFormProps {
   createUser: (payload: SignUpModel) => Promise<void>
+  login: (payload: LoginModel) => Promise<LoginResponseModel>
 }
 
-const SignUpForm = ({ createUser }: SignUpFormProps) => {
+const SignUpForm = ({ createUser, login }: SignUpFormProps) => {
   const navigate = useNavigate()
   const [form, setForm] = useState<SignUpModel>({
     name: '',
@@ -34,11 +37,22 @@ const SignUpForm = ({ createUser }: SignUpFormProps) => {
     setIsLoading(true)
     createUser(form)
       .then(() => {
-        navigate('/login')
+        const { name, ...payload } = form
+        login(payload).then((response) => {
+          localStorage.setItem(
+            '@nestClin:userAuth',
+            JSON.stringify({
+              token: response.token,
+              isProfessional: form.isProfessional,
+            })
+          )
+          navigate('/services')
+        })
       })
       .catch((error) => {
-        window.alert('User already exists, please log in')
-        console.error(error)
+        toast.error(error.response.data.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
       })
       .finally(() => setIsLoading(false))
   }
@@ -57,7 +71,7 @@ const SignUpForm = ({ createUser }: SignUpFormProps) => {
   }
 
   return (
-    <Flex minH={'90vh'} align={'center'} justify={'center'} bg={'gray.900'}>
+    <Flex as='main' minH={'90vh'} align={'center'} justify={'center'}>
       <Stack
         spacing={8}
         mx={'auto'}

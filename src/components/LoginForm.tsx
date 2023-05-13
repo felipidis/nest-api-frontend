@@ -12,10 +12,15 @@ import {
   Link,
   Switch,
 } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
-import { LoginModel } from '../models/login'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { LoginModel, LoginResponseModel } from '../models/login'
 
-const LoginForm = () => {
+interface LoginFormProps {
+  login: (data: LoginModel) => Promise<LoginResponseModel>
+}
+
+const LoginForm = ({ login }: LoginFormProps) => {
+  const navigate = useNavigate()
   const [form, setForm] = useState<LoginModel>({
     email: '',
     password: '',
@@ -26,6 +31,18 @@ const LoginForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsLoading(true)
+    login(form)
+      .then((response) => {
+        localStorage.setItem(
+          '@nestClin:userAuth',
+          JSON.stringify({
+            token: response.token,
+            isProfessional: form.isProfessional,
+          })
+        )
+        navigate('/services')
+      })
+      .finally(() => setIsLoading(false))
   }
 
   const handleSwitchChange = () => {
@@ -43,6 +60,7 @@ const LoginForm = () => {
 
   return (
     <Flex
+      as='main'
       w={'full'}
       minH={'90vh'}
       align={'center'}
@@ -80,6 +98,7 @@ const LoginForm = () => {
                   value={form.email}
                   onChange={handleChange}
                   type='email'
+                  name='email'
                   bg={'white'}
                 />
               </FormControl>
@@ -89,6 +108,7 @@ const LoginForm = () => {
                   value={form.password}
                   onChange={handleChange}
                   type='password'
+                  name='password'
                   bg={'white'}
                 />
               </FormControl>
