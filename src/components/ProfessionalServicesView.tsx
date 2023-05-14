@@ -44,7 +44,7 @@ const ProfessionalServiceView = ({
           attendance.professionalId === professional?.id
       )
     )
-  }, [attendances])
+  }, [attendances, professional])
 
   return (
     <>
