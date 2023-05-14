@@ -1,5 +1,5 @@
 import { Button, Flex, Stack, Heading, Text } from '@chakra-ui/react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 
 const publicRoutes: any = {
   '/': true,
@@ -9,6 +9,11 @@ const publicRoutes: any = {
 
 const Header = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const logOut = () => {
+    localStorage.removeItem('@nestClin:userAuth')
+    navigate('/login')
+  }
 
   return (
     <Flex
@@ -72,8 +77,6 @@ const Header = () => {
               Serviços
             </Button>
             <Button
-              as={RouterLink}
-              to='/profile'
               variant={'link'}
               fontSize={'sm'}
               fontWeight={400}
@@ -82,8 +85,9 @@ const Header = () => {
                 color: 'white',
                 textDecoration: 'underline',
               }}
+              onClick={logOut}
             >
-              Perfil
+              Sair
             </Button>
           </>
         )}

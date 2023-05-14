@@ -22,6 +22,10 @@ interface AttendanceCardProps {
   ) => Promise<void>
   professional?: ProfessionalModel
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedAttendance?: React.Dispatch<
+    React.SetStateAction<AttendanceModel | null>
+  >
+  onOpen?: () => void
 }
 
 const AttendanceCard = ({
@@ -29,6 +33,8 @@ const AttendanceCard = ({
   updateAttendanceService,
   professional,
   setRefresh,
+  setSelectedAttendance,
+  onOpen,
 }: AttendanceCardProps) => {
   const handleInitAttendance = () => {
     updateAttendanceService(
@@ -42,6 +48,8 @@ const AttendanceCard = ({
   const handleFinsishAttendance = () => {
     updateAttendanceService({ isFinished: true }, attendance.id).then(() => {
       setRefresh((prevState) => !prevState)
+      setSelectedAttendance!(attendance)
+      onOpen!()
     })
   }
 
@@ -49,7 +57,7 @@ const AttendanceCard = ({
     <Card maxW='sm' minH={'350px'}>
       <CardBody>
         <Stack mt='6' spacing='3'>
-          <Heading size='md'>Atendimento # {}</Heading>
+          <Heading size='md'>Atendimento</Heading>
 
           {attendance.jobs.map((job) => (
             <Box key={job.id} mb='4'>

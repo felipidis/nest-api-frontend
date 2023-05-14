@@ -16,7 +16,7 @@ import ClientAttendanceSummary from './ClientAttendanceSummary'
 import { CreateAttendanceRequest } from '../models/attendance'
 import { toast } from 'react-toastify'
 
-interface AttendanceModalProps {
+interface AttendanceResumeModalProps {
   onClose: () => void
   isOpen: boolean
   jobs: JobModel[]
@@ -24,13 +24,13 @@ interface AttendanceModalProps {
   createAttendance: (data: CreateAttendanceRequest) => Promise<void>
 }
 
-const AttendanceModal = ({
+const AttendanceResumeModal = ({
   onClose,
   isOpen,
   jobs,
   setSelectedJobs,
   createAttendance,
-}: AttendanceModalProps) => {
+}: AttendanceResumeModalProps) => {
   const [showSummary, setShowSummary] = useState(false)
 
   const handleClose = () => {
@@ -113,4 +113,4 @@ const AttendanceModal = ({
   )
 }
 
-export default AttendanceModal
+export default AttendanceResumeModal

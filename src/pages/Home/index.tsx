@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Text } from '@chakra-ui/react'
 import Header from '../../components/Header'
+import { useNavigate } from 'react-router-dom'
 
 const Home: React.FC = () => {
+  const navigate = useNavigate()
+  const userAuth = JSON.parse(localStorage.getItem('@nestClin:userAuth')!)
+  useEffect(() => {
+    if (userAuth?.token) {
+      navigate('/services')
+    }
+  }, [])
+
   return (
     <Box bg='gray.900' color='white' height='100vh'>
       <Header />
