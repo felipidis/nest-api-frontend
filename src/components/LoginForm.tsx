@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { LoginModel, LoginResponseModel } from '../models/login'
+import { toast } from 'react-toastify'
 
 interface LoginFormProps {
   login: (data: LoginModel) => Promise<LoginResponseModel>
@@ -33,6 +34,9 @@ const LoginForm = ({ login }: LoginFormProps) => {
     setIsLoading(true)
     login(form)
       .then((response) => {
+        toast.success('Login realizado com sucesso!', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
         localStorage.setItem(
           '@nestClin:userAuth',
           JSON.stringify({
@@ -42,6 +46,11 @@ const LoginForm = ({ login }: LoginFormProps) => {
         )
         navigate('/services')
       })
+      .catch((error) =>
+        toast.error(error.response.data.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
+      )
       .finally(() => setIsLoading(false))
   }
 

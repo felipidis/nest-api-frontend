@@ -37,6 +37,9 @@ const SignUpForm = ({ createUser, login }: SignUpFormProps) => {
     setIsLoading(true)
     createUser(form)
       .then(() => {
+        toast.success('Cadastro realizado com sucesso', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        })
         const { name, ...payload } = form
         login(payload).then((response) => {
           localStorage.setItem(
