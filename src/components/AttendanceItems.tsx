@@ -1,14 +1,14 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import { Job } from '../models/job'
+import { JobModel } from '../models/job'
 import { priceFormatter } from '../utils/currencyFormatter'
 
 interface AttendanceItemsProps {
-  jobs: Job[]
-  setJobsList: React.Dispatch<React.SetStateAction<Job[]>>
+  jobs: JobModel[]
+  setJobsList: React.Dispatch<React.SetStateAction<JobModel[]>>
 }
 
 const AttendanceItems = ({ jobs, setJobsList }: AttendanceItemsProps) => {
-  const removeJob = (job: Job) => {
+  const removeJob = (job: JobModel) => {
     const updatedJobs = jobs.filter((j) => j.id !== job.id)
     setJobsList(updatedJobs)
   }

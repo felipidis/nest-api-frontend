@@ -1,9 +1,9 @@
 import { Box, Text, VStack } from '@chakra-ui/react'
-import { Job } from '../models/job'
+import { JobModel } from '../models/job'
 import { priceFormatter } from '../utils/currencyFormatter'
 
 interface ClientAttendanceSummaryProps {
-  jobs: Job[]
+  jobs: JobModel[]
 }
 const ClientAttendanceSummary = ({ jobs }: ClientAttendanceSummaryProps) => {
   const total = jobs.reduce((acc, job) => acc + Number(job.price), 0)

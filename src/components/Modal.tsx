@@ -9,19 +9,18 @@ import {
   Button,
   Text,
 } from '@chakra-ui/react'
-import { Job } from '../models/job'
+import { JobModel } from '../models/job'
 import AttendanceItems from './AttendanceItems'
 import { useState } from 'react'
 import ClientAttendanceSummary from './ClientAttendanceSummary'
 import { CreateAttendanceRequest } from '../models/attendance'
-import { error } from 'console'
 import { toast } from 'react-toastify'
 
 interface AttendanceModalProps {
   onClose: () => void
   isOpen: boolean
-  jobs: Job[]
-  setSelectedJobs: React.Dispatch<React.SetStateAction<Job[]>>
+  jobs: JobModel[]
+  setSelectedJobs: React.Dispatch<React.SetStateAction<JobModel[]>>
   createAttendance: (data: CreateAttendanceRequest) => Promise<void>
 }
 

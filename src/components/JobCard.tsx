@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Job } from '../models/job'
+import { JobModel } from '../models/job'
 import {
   Button,
   Card,
@@ -14,9 +14,9 @@ import {
 import { priceFormatter } from '../utils/currencyFormatter'
 
 interface JobCardProps {
-  job: Job
-  setSelectedJobs: React.Dispatch<React.SetStateAction<Job[]>>
-  selectedJobs: Job[]
+  job: JobModel
+  setSelectedJobs: React.Dispatch<React.SetStateAction<JobModel[]>>
+  selectedJobs: JobModel[]
 }
 
 const JobCard = ({ job, setSelectedJobs, selectedJobs }: JobCardProps) => {
@@ -25,7 +25,7 @@ const JobCard = ({ job, setSelectedJobs, selectedJobs }: JobCardProps) => {
     setIsDisabled(selectedJobs.some((selectedJob) => job.id === selectedJob.id))
   }, [job.id, selectedJobs])
 
-  const handleAddJob = (job: Job) => {
+  const handleAddJob = (job: JobModel) => {
     setSelectedJobs((prev) => [...prev, job])
   }
   return (

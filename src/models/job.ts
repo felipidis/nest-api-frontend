@@ -1,4 +1,4 @@
-export interface Job {
+export interface JobModel {
   id: string
   description: string
   price: string

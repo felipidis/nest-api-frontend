@@ -1,63 +1,70 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header'
-import { Box, Button, Flex, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, useDisclosure } from '@chakra-ui/react'
 import { loadJobs } from '../../services/loadJobsService'
-import { Job } from '../../models/job'
-import JobCard from '../../components/JobCard'
+import { JobModel } from '../../models/job'
 import AttendanceModal from '../../components/Modal'
 import { createAttendance } from '../../services/createAttendanceService'
+import { loadAttendances } from '../../services/loadAttendancesService'
+import { AttendanceModel } from '../../models/attendance'
+import ClientServicesView from '../../components/ClientServicesView'
+import ProfessionalServiceView from '../../components/ProfessionalServicesView'
+import { updateAttendanceService } from '../../services/updateAttendanceService'
+import { loadProfessional } from '../../services/loadProfessionalService'
+import { ProfessionalModel } from '../../models/professional'
 
 const Services: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [selectedJobs, setSelectedJobs] = useState<Job[]>([])
+  const [jobs, setJobs] = useState<JobModel[]>([])
+  const [attendances, setAttendances] = useState<AttendanceModel[]>([])
+  const [selectedJobs, setSelectedJobs] = useState<JobModel[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [professional, setProfessional] = useState<ProfessionalModel | null>(
+    null
+  )
+  const [refresh, setRefresh] = useState(false)
+
+  const userAuth = JSON.parse(localStorage.getItem('@nestClin:userAuth')!)
 
   useEffect(() => {
-    loadJobs().then(setJobs)
-  }, [])
+    loadProfessional().then(setProfessional)
+    if (userAuth.isProfessional) {
+      loadAttendances().then(setAttendances)
+    } else {
+      loadJobs().then(setJobs)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh])
+
+  const handleServiceView = () => {
+    return userAuth.isProfessional ? (
+      <ProfessionalServiceView
+        attendances={attendances}
+        updateAttendanceService={updateAttendanceService}
+        professional={professional!}
+        setRefresh={setRefresh}
+      />
+    ) : (
+      <ClientServicesView
+        jobs={jobs}
+        setSelectedJobs={setSelectedJobs}
+        onOpen={onOpen}
+        selectedJobs={selectedJobs}
+      />
+    )
+  }
 
   return (
     <>
       <Box bg='gray.900' minH='100vh'>
         <Header />
-        <Flex as={'main'} minH={'90vh'} direction={'column'} p={'20px'}>
-          <Flex justify={'flex-end'} mb={'20px'}>
-            <Button
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'blue.400'}
-              _hover={{
-                bg: 'blue.500',
-              }}
-              onClick={onOpen}
-            >
-              Novo atendimento
-            </Button>
-          </Flex>
-          <Stack minH={'70vh'} justify={'center'}>
-            <Text textAlign={'center'} fontSize={'4xl'} color={'white'}>
-              Selecione os serviços que deseja adicionar ao seu atendimento!
-            </Text>
-            <Flex
-              align={'center'}
-              justify={'center'}
-              direction={{ base: 'column', md: 'row' }}
-              flexWrap={'wrap'}
-              gap={'4'}
-              h={'fit-content'}
-            >
-              {!!jobs.length &&
-                jobs.map((job) => (
-                  <JobCard
-                    key={job.id}
-                    job={job}
-                    setSelectedJobs={setSelectedJobs}
-                    selectedJobs={selectedJobs}
-                  />
-                ))}
-            </Flex>
-          </Stack>
+        <Flex
+          as={'main'}
+          minH={'90vh'}
+          direction={'column'}
+          p={'20px'}
+          justify={userAuth.isProfessional && 'center'}
+        >
+          {handleServiceView()}
         </Flex>
       </Box>
       <AttendanceModal
